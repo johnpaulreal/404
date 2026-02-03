@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>404 — Page Not Found</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ===== BODY ===== */
+body {
+  height: 100vh;
+  background: #0a0d12;
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body.card-mode {
+  font-family: 'Crimson Text', serif;
+  background: linear-gradient(180deg, #111, #0c0c0c);
+  color: #fff;
+  justify-content: flex-start;
+  padding-top: 60px;
+}
+
+/* ===== ERROR PAGE ===== */
+.error {
+  width: 100%;
+  max-width: 860px;
+  padding: 64px;
+  background: #0f141a;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+}
+
+.badge {
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.error h1 {
+  font-size: 38px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.error p {
+  font-size: 15px;
+  color: #9ca3af;
+  line-height: 1.75;
+  max-width: 680px;
+  margin-bottom: 28px;
+}
+
+.error ul {
+  font-size: 14px;
+  color: #9ca3af;
+  padding-left: 18px;
+  margin-bottom: 36px;
+}
+
+.error li { margin-bottom: 6px; }
+
+.divider {
+  height: 1px;
+  background: #1f2937;
+  margin: 36px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.actions button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primary {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #fff;
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid #1f2937;
+  color: #9ca3af;
+}
+
+/* ===== NAME MODAL ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  position: relative;
+  background: #0f141a;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 32px;
+  width: 90%;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+.modal-box h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-box p {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.modal-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #1f2937;
+  background: #0b1016;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.modal-box input:focus {
+  outline: none;
+  border-color: #374151;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ===== HANDWRITTEN ===== */
+.handwritten { font-family: 'Dancing Script', cursive; }
+
+/* ===== CARD ===== */
+.perspective { perspective: 1500px; }
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16/11;
+  margin: 0 auto;
+  position: relative;
+}
+
+.envelope {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease-in-out;
+}
+
+.card:hover .envelope {
+  transform: rotateX(-180deg);
+}
+
+/* Front of envelope */
+.envelope-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #fcfaf7;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  color: #d33;
+}
+
+/* Back/inside the envelope */
+.envelope-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #fff7f5;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  transform: rotateX(180deg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+/* Floating hearts inside card */
+#heartContainer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  50% { transform: scale(1.2); }
+  75% { transform: scale(1.1); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-180px) scale(1.2); opacity: 0; }
+}
+
+@keyframes confetti {
+  0% { transform: translate(0,0) rotate(0deg); opacity:1; }
+  100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(var(--s)); opacity:0; }
+}
+
+.confetti-heart {
+  position: absolute;
+  font-size: 12px;
+  color: rgba(255,0,80,0.8);
+  pointer-events: none;
+  z-index: 4;
+}
+</style>
+</head>
+
+<body>
+
+<div class="error">
+  <span class="badge">Error 404</span>
+  <h1>Page Not Found</h1>
+  <p>The page you’re looking for doesn’t exist or may have been moved.</p>
+  <ul>
+    <li>Check the URL for typos</li>
+    <li>Use the navigation</li>
+    <li>Return to the homepage</li>
+  </ul>
+  <div class="divider"></div>
+  <div class="actions">
+    <button class="primary" onclick="openNameModal()">Reload page</button>
+    <button class="secondary" onclick="location.href='/'">Go to homepage</button>
+  </div>
+</div>
+
+<!-- NAME MODAL -->
+<div class="modal" id="nameModal" style="display:none">
+  <div class="modal-box">
+    <h2>Before you continue</h2>
+    <p>Who should this letter be addressed to?</p>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <div class="modal-actions">
+      <button class="secondary" onclick="closeModal()">Cancel</button>
+      <button class="primary" onclick="submitName()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let musicPlayed = false;
+let userName = "My Love";
+
+function openNameModal() {
+  document.getElementById('nameModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('nameInput').focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById('nameModal').style.display = 'none';
+}
+
+function submitName() {
+  const input = document.getElementById('nameInput').value.trim();
+  if (input) userName = input;
+  closeModal();
+  showValentine();
+}
+
+function playMusic() {
+  if (musicPlayed) return;
+  const music = document.getElementById('valentineMusic');
+  if (music) {
+    music.volume = 0.4;
+    music.play().catch(() => {});
+    musicPlayed = true;
+  }
+}
+
+function showValentine() {
+  document.body.classList.add('card-mode');
+  document.body.innerHTML = `
+<audio id="valentineMusic" preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2023/02/28/audio_2b7d3a5b1a.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card perspective group" onmouseenter="playMusic(); launchConfetti()">
+
+  <div class="envelope">
+    <div class="envelope-front">
+      Hover to Open ❤
+    </div>
+
+    <div class="envelope-back">
+      <!-- Floating hearts -->
+      <div id="heartContainer"></div>
+
+      <!-- Big pulsating heart -->
+      <div style="position:absolute; inset:0; display:flex; justify-content:center; align-items:center; z-index:1; pointer-events:none;">
+        <div style="font-size:120px; color:rgba(255,0,80,0.08); animation:heartbeat 1.5s infinite;">❤</div>
+      </div>
+
+      <!-- Letter content -->
+      <div style="position:relative; z-index:2; flex-grow:1; display:flex; flex-direction:column; justify-content:center; text-align:center;">
+        <h2 class="handwritten text-3xl text-zinc-800">Dear ${userName},</h2>
+        <p class="text-xl font-bold text-red-900 italic uppercase tracking-[0.18em]">Be my Valentine?</p>
+        <p class="handwritten text-2xl text-red-900 mt-4">Your Admirer</p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+  // Floating hearts inside card
+  const heartContainer = document.getElementById('heartContainer');
+  setInterval(() => {
+    const heart = document.createElement('div');
+    heart.textContent = '❤';
+    heart.style.position = 'absolute';
+    heart.style.left = Math.random() * 90 + '%';
+    heart.style.bottom = '-20px';
+    heart.style.fontSize = 10 + Math.random() * 20 + 'px';
+    heart.style.color = `rgba(255,0,80,${Math.random()*0.5+0.2})`;
+    heart.style.opacity = Math.random() * 0.6 + 0.2;
+    heart.style.animation = `floatUp ${3 + Math.random()*2}s linear forwards`;
+    heartContainer.appendChild(heart);
+    setTimeout(()=>heart.remove(), 6000);
+  }, 400);
+}
+
+// Confetti burst
+function launchConfetti() {
+  const card = document.querySelector('.card');
+  if (!card) return;
+  for(let i=0;i<20;i++){
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti-heart');
+    confetti.textContent = '❤';
+    const size = 10 + Math.random()*10;
+    confetti.style.fontSize = size+'px';
+    confetti.style.left = 40 + Math.random()*60+'%';
+    confetti.style.top = 50 + Math.random()*20+'%';
+    confetti.style.setProperty('--x', (Math.random()*200-100)+'px');
+    confetti.style.setProperty('--y', (-Math.random()*200-50)+'px');
+    confetti.style.setProperty('--r', (Math.random()*360)+'deg');
+    confetti.style.setProperty('--s', (Math.random()*1.5+0.5));
+    confetti.style.animation = `confetti 2s ease-out forwards`;
+    card.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),2500);
+  }
+}
+</script>
+
+</body>
+</html>
